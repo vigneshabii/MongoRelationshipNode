@@ -1,16 +1,12 @@
 const dbo=require('./db');
+const customerphoneModel=require('./models/customerphoneModel');
+const customerModel=require('./models/customerModel');
+
+(async (req,res)=>{
+    await dbo.getDatabase();
+})();
 
 (async () => {
-    let database=await dbo.getDatabase();
-    let collection=database.collection('customers');
-    let find=await collection.aggregate([
-        {$lookup:{
-            from: "customer_phones",
-            localField:"_id",
-            foreignField:"customer_id",
-            as: "Cutomer_details"
-        }}
-    ]).toArray();
-
-    console.log(JSON.stringify(find));
+    const customers=await customerphoneModel.find({}).populate('customer_id');
+    console.log(customers);
 })();
